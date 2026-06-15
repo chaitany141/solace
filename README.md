@@ -1,16 +1,29 @@
-# CareerCompass AI
+Solace AI
 
-CareerCompass AI is a production-ready AI-powered career guidance chatbot that helps users with resume reviews, interview preparation, career planning, skill development, and professional growth guidance.
+Solace AI is an AI-powered emotional support companion designed to provide a safe, empathetic, and judgment-free space for users to express their thoughts and feelings. Built with a "Listen Before Advice" philosophy, Solace focuses on understanding users through meaningful conversations before offering guidance, helping them feel heard, supported, and less alone.
 
-**Live Link:** https://career-campus-ruddy.vercel.app/
+Unlike traditional chatbots that rush to provide solutions, Solace actively listens, validates emotions, and encourages healthy self-reflection while maintaining a warm and compassionate tone.
 
-## Features
-- AI Career Guidance
-- Resume Feedback
-- Interview Preparation
-- Skill Roadmaps
-- Professional Advice
-- Secure & Structured Responses
+Live Link: Coming Soon
+
+Features
+Active Listening Before Advice
+Empathetic & Human-Like Conversations
+Emotional Validation & Support
+Personalized Guidance Based on User Context
+Mental Wellness & Self-Reflection Assistance
+Stress Management & Mindfulness Suggestions
+Crisis Detection & Safety-Focused Responses
+Secure & Structured AI Interactions
+Modern Full-Stack Architecture
+How Solace Works
+
+Solace follows a simple principle:
+
+Understand → Validate → Explore → Guide
+
+When users share their thoughts or struggles, Solace first focuses on understanding their emotions through active listening and thoughtful follow-up questions. After gathering enough context, it offers gentle guidance, practical coping strategies, and supportive encouragement tailored to the user's situation.
+
 
 ## Tech Stack
 - React.js
