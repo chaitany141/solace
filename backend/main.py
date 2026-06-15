@@ -21,7 +21,11 @@ conversation_memory = {}
 # Setup CORS so the React frontend can communicate with it
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust in production
+    allow_origins=[
+        "https://solace-seven-nu.vercel.app",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
