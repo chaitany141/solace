@@ -23,6 +23,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -180,17 +181,28 @@ function App() {
   return (
     <div className="app-layout">
 
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="sidebar-icon">🌿</div>
           <div className="sidebar-title">
             <h1>Solace</h1>
             <p>A Safe Space for You</p>
           </div>
+          <button className="close-sidebar-btn" onClick={() => setIsSidebarOpen(false)}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
 
-        <button className="new-chat-btn" onClick={createNewSession}>
+        <button className="new-chat-btn" onClick={() => {
+          createNewSession();
+          setIsSidebarOpen(false);
+        }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -203,7 +215,10 @@ function App() {
             <div
               key={session.id}
               className={`session-item ${session.id === activeSessionId ? 'active' : ''}`}
-              onClick={() => setActiveSessionId(session.id)}
+              onClick={() => {
+                setActiveSessionId(session.id);
+                setIsSidebarOpen(false);
+              }}
             >
               {session.title}
             </div>
@@ -229,6 +244,14 @@ function App() {
 
       {/* Main Chat Area */}
       <main className="main-chat">
+        {/* Mobile Header */}
+        <div className="mobile-header">
+          <button className="menu-btn" onClick={() => setIsSidebarOpen(true)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <h2>Solace</h2>
+        </div>
+
         <div className="chat-messages">
           {messages.length === 0 ? (
             <div className="empty-state">
