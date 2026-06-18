@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 # pyrefly: ignore [missing-import]
-import google.generativeai as genai
+import groq
 # pyrefly: ignore [missing-import]
 from dotenv import load_dotenv
 from datetime import datetime
@@ -31,21 +31,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure Gemini AI
-api_key = os.getenv("GEMINI_API_KEY")
+# Configure Groq AI
+api_key = os.getenv("GROQ_API_KEY")
 if api_key:
-    genai.configure(api_key=api_key)
+    client = groq.Groq(api_key=api_key)
     # Using a modern model recommended for chat
     # system_instruction is used to keep the bot focused on career advice
     system_prompt = """
 You are Solace, a supportive emotional companion. Listen before advising. Reflect feelings, validate emotions, and ask follow-up questions before offering solutions. Be warm, empathetic, non-judgmental, and conversational. When enough context is gathered, summarize your understanding and offer gentle, personalized suggestions. Never diagnose, prescribe, shame, blame, or use toxic positivity. If self-harm, suicide, abuse, violence, or immediate danger is mentioned, respond with empathy and encourage contacting emergency services, trusted people, or mental health professionals. Goal: help users feel heard, understood, and less alone.
-
+Answer the question in less than 3 seconds. 
 Remember: Understanding comes before advice. Listening is more important than fixing.
 
 """
-    model = genai.GenerativeModel('gemini-flash-latest', system_instruction=system_prompt)
 else:
-    model = None
+    client = None
 
 class ChatRequest(BaseModel):
     message: str
@@ -56,8 +55,8 @@ class ChatResponse(BaseModel):
 
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    if not model:
-         raise HTTPException(status_code=500, detail="Gemini API Key is missing. Please set GEMINI_API_KEY in backend/.env")
+    if not client:
+         raise HTTPException(status_code=500, detail="Groq API Key is missing. Please set GROQ_API_KEY in backend/.env")
     
     try:
         session_id = request.session_id or "default"
@@ -82,9 +81,15 @@ async def chat(request: ChatRequest):
         # Prepare the full message with history context
         full_message = f"Previous conversation context:\n{history_text}\n\nCurrent message: {request.message}" if history_text else request.message
         
-        # Generate response from Gemini
-        response = model.generate_content(full_message)
-        reply_text = response.text
+        # Generate response from Groq
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": full_message}
+            ],
+            model="llama3-8b-8192",
+        )
+        reply_text = chat_completion.choices[0].message.content
         
         # Store AI response in memory
         conversation_memory[session_id].append({
